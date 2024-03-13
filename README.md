@@ -13,3 +13,12 @@ This simple app is a web birthday card, which can be opened in any browser. Your
   - HTML
   - JavaScript
   - CSS
+
+## How to run:
+1. open console on your machine in the project directory
+2. run "hb.py"
+3. copy server link and open it in your browser
+
+## Future work:
+- modify sound analysis (currently works differently for environments with an unstable sound level)
+- improve animation
