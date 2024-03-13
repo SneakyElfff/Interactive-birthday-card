@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Card</title>
+    <style>
+        body {
+            background-color: pink;
+            text-align: center;
+            font-family: "Times New Roman", sans-serif;
+        }
+        svg {
+            width: 200px;
+            height: 200px;
+            position: fixed; /* Set position fixed for the SVG */
+            top: 255px; /* Adjust top position as needed */
+            left: 0;
+            right: 0;
+            margin: auto; /* Center the SVG both horizontally and vertically */
+        }
+        /* Define flame animation */
+        @keyframes flame {
+            0% { opacity: 0; }
+            10% { opacity: 0.1; }
+            20% { opacity: 0.2; }
+            30% { opacity: 0.3; }
+            40% { opacity: 0.4; }
+            50% { opacity: 0.5; }
+            60% { opacity: 0.6; }
+            70% { opacity: 0.7; }
+            80% { opacity: 0.8; }
+            90% { opacity: 0.9; }
+            100% { opacity: 1; }
+        }
+        /* Apply flame animation to circles */
+        circle.flame {
+            animation: flame 0.35s infinite alternate;
+        }
+        /* Style for the action button */
+        #action-button {
+            background-color: purple;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px; /* Adjust the margin to position the button */
+            margin-left: auto; /* Center the button horizontally */
+            margin-right: auto;
+            border-radius: 30px; /* Adjust the border-radius to create rounded corners */
+        }
+    </style>
+</head>
+<body>
+    <h1>Happy Birthday</h1>
+    <p id="message1">Blow the candles!</p>
+    <p id="message2"></p>
+    <p id="message3"></p>
+    <h3 id="message"></h3>
+    <button id="action-button" style="display: none;">Read the letter</button>
+    <div id="cake-svg">
+        {{ cake_svg | safe }}
+    </div>
+    <script>
+        // Function to update messages and show action button
+        function updateMessages() {
+            fetch('/get_messages')
+                .then(response => response.json())
+                .then(data => {
+                    // Update messages on the page
+                    document.getElementById('message').innerText = data.message;
+                    document.getElementById('message2').innerText = data.message2;
+                    document.getElementById('message3').innerText = data.message3;
+
+                    // Check if last message or sound detected, then show action button
+                    if (data.message) {
+                        document.getElementById('action-button').style.display = 'block';
+                        document.querySelectorAll('.flame').forEach(flame => flame.style.display = 'none');
+                        clearInterval(intervalId); // Clear interval to stop further requests
+                    }
+                });
+        }
+
+        // Update messages every 3 seconds
+        const intervalId = setInterval(updateMessages, 3000);
+
+        document.getElementById('action-button').addEventListener('click', function() {
+            console.log('Button clicked'); // Check if this message appears in the browser console
+            window.location.href = '/letter';
+        });
+    </script>
+</body>
+</html>
